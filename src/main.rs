@@ -46,6 +46,10 @@ struct Cli {
     /// Output file path (only used for single-prompt mode).
     #[arg(long, default_value = "output.png")]
     out: PathBuf,
+
+    /// Convert output to WebP with given quality (0-100). Omit value for default 80.
+    #[arg(long, default_missing_value = "80", num_args = 0..=1)]
+    webp: Option<f32>,
 }
 
 // ---------------------------------------------------------------------------
@@ -380,6 +384,26 @@ async fn download_image(client: &Client, url: &str, path: &Path) -> Result<()> {
     Ok(())
 }
 
+fn convert_to_webp(png_path: &Path, quality: f32) -> Result<PathBuf> {
+    let img = image::open(png_path)
+        .with_context(|| format!("Failed to open {} for WebP conversion", png_path.display()))?;
+
+    let encoder = webp::Encoder::from_image(&img)
+        .map_err(|e| anyhow::anyhow!("WebP encoder error: {e}"))?;
+
+    let webp_data = encoder.encode(quality);
+
+    let webp_path = png_path.with_extension("webp");
+    std::fs::write(&webp_path, &*webp_data)
+        .with_context(|| format!("Failed to write {}", webp_path.display()))?;
+
+    // Remove the original PNG after successful conversion.
+    std::fs::remove_file(png_path)
+        .with_context(|| format!("Failed to remove {}", png_path.display()))?;
+
+    Ok(webp_path)
+}
+
 async fn generate_image(
     client: &Client,
     token: &str,
@@ -388,6 +412,7 @@ async fn generate_image(
     height: u32,
     resolved: &ResolvedModel,
     out: &Path,
+    webp_quality: Option<f32>,
 ) -> Result<()> {
     eprintln!("Creating prediction for: \"{prompt}\"");
     let input = build_input(prompt, width, height, &resolved.aspect_ratios);
@@ -403,7 +428,14 @@ async fn generate_image(
 
     eprintln!("Downloading image…");
     download_image(client, &image_url, out).await?;
-    eprintln!("Saved to {}", out.display());
+
+    if let Some(quality) = webp_quality {
+        eprintln!("Converting to WebP (quality {quality})…");
+        let webp_path = convert_to_webp(out, quality)?;
+        eprintln!("Saved to {}", webp_path.display());
+    } else {
+        eprintln!("Saved to {}", out.display());
+    }
 
     Ok(())
 }
@@ -463,6 +495,7 @@ async fn main() -> Result<()> {
             job.height.unwrap_or(cli.height),
             resolved,
             &job.out,
+            cli.webp,
         )
         .await
         {

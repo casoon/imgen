@@ -22,11 +22,20 @@ Models that use `aspect_ratio` are handled transparently -- the tool reads each 
 
 ## Installation
 
+### Homebrew (macOS / Linux)
+
+```bash
+brew tap casoon/tap
+brew install imgen
+```
+
+### From source
+
 ```bash
 cargo install --path .
 ```
 
-Or build from source:
+Or build manually:
 
 ```bash
 cargo build --release
@@ -110,6 +119,22 @@ Run:
 imgen --prompt-file prompts.json
 ```
 
+### WebP conversion
+
+Convert output to WebP (default quality 80):
+
+```bash
+imgen "A sunset" --out sunset.png --webp
+```
+
+With custom quality (0-100):
+
+```bash
+imgen "A sunset" --out sunset.png --webp 60
+```
+
+The original PNG is replaced by the `.webp` file. Works in batch mode too.
+
 ### All options
 
 ```
@@ -124,6 +149,7 @@ Options:
       --width <WIDTH>       Output width in pixels [default: 1024]
       --height <HEIGHT>     Output height in pixels [default: 768]
       --out <OUT>           Output file path [default: output.png]
+      --webp [<QUALITY>]    Convert to WebP (default quality: 80)
   -h, --help                Print help
   -V, --version             Print version
 ```
