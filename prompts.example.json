@@ -1,0 +1,34 @@
+{
+  "defaults": {
+    "model": "black-forest-labs/flux-1.1-pro",
+    "width": 1024,
+    "height": 768
+  },
+  "jobs": [
+    {
+      "prompt": "A serene mountain landscape at sunset with golden light filtering through the clouds",
+      "out": "output/mountain_sunset.png"
+    },
+    {
+      "prompt": "A futuristic cityscape with neon lights and flying cars, cyberpunk aesthetic",
+      "out": "output/neon_city.png",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "prompt": "A cozy coffee shop interior with warm lighting and rain on the windows",
+      "out": "output/coffee_shop.png",
+      "model": "black-forest-labs/flux-schnell"
+    },
+    {
+      "prompt": "Portrait of a calico cat sitting on a stack of old books, oil painting style",
+      "out": "output/cat_portrait.png",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "prompt": "Aerial view of a coral reef with crystal clear turquoise water, photorealistic",
+      "out": "output/coral_reef.png"
+    }
+  ]
+}
