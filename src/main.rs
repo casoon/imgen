@@ -66,6 +66,8 @@ struct PromptJob {
     height: Option<u32>,
     #[serde(default)]
     model: Option<String>,
+    #[serde(default)]
+    webp: Option<f32>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -76,6 +78,8 @@ struct JobDefaults {
     height: Option<u32>,
     #[serde(default)]
     model: Option<String>,
+    #[serde(default)]
+    webp: Option<f32>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -495,7 +499,7 @@ async fn main() -> Result<()> {
             job.height.unwrap_or(cli.height),
             resolved,
             &job.out,
-            cli.webp,
+            job.webp.or(cli.webp),
         )
         .await
         {
@@ -528,6 +532,7 @@ fn build_jobs(cli: &Cli) -> Result<Vec<PromptJob>> {
             job.width = job.width.or(defaults.width);
             job.height = job.height.or(defaults.height);
             job.model = job.model.take().or_else(|| defaults.model.clone());
+            job.webp = job.webp.or(defaults.webp);
         }
 
         Ok(jobs)
@@ -543,6 +548,7 @@ fn build_jobs(cli: &Cli) -> Result<Vec<PromptJob>> {
             width: None,
             height: None,
             model: None,
+            webp: None,
         }])
     }
 }

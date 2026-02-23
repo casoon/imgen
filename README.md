@@ -89,7 +89,8 @@ The prompt file supports two formats:
   "defaults": {
     "model": "black-forest-labs/flux-schnell",
     "width": 1024,
-    "height": 1024
+    "height": 1024,
+    "webp": 80
   },
   "jobs": [
     {
@@ -163,6 +164,7 @@ Options:
 | `model`  | string | Replicate model for all jobs                      |
 | `width`  | u32    | Default width for all jobs                        |
 | `height` | u32    | Default height for all jobs                       |
+| `webp`   | f32    | Convert all jobs to WebP with this quality (0-100)|
 
 ### Jobs
 
@@ -173,10 +175,11 @@ Options:
 | `width`  | u32    | no       | Image width (overrides default)                   |
 | `height` | u32    | no       | Image height (overrides default)                  |
 | `model`  | string | no       | Replicate model (overrides default)               |
+| `webp`   | f32    | no       | Convert to WebP with this quality (overrides default) |
 
 ### Priority
 
-Per-job value > `defaults` section > CLI flags (`--model`, `--width`, `--height`)
+Per-job value > `defaults` section > CLI flags (`--model`, `--width`, `--height`, `--webp`)
 
 ## License
 
