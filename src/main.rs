@@ -15,6 +15,8 @@ const REPLICATE_API_BASE: &str = "https://api.replicate.com/v1";
 const DEFAULT_MODEL: &str = "black-forest-labs/flux-1.1-pro";
 const POLL_INTERVAL: Duration = Duration::from_secs(2);
 const TIMEOUT: Duration = Duration::from_secs(120);
+const MAX_RETRIES: u32 = 5;
+const DEFAULT_RETRY_DELAY: Duration = Duration::from_secs(10);
 
 // ---------------------------------------------------------------------------
 // CLI
@@ -140,13 +142,13 @@ async fn resolve_model(
     model: &str,
 ) -> Result<ResolvedModel> {
     let url = format!("{REPLICATE_API_BASE}/models/{model}");
+    let token = token.to_string();
 
-    let resp = client
-        .get(&url)
-        .bearer_auth(token)
-        .send()
-        .await
-        .with_context(|| format!("Failed to fetch model info for {model}"))?;
+    let resp = send_with_retry(
+        || client.get(&url).bearer_auth(&token),
+        &format!("fetch model info for {model}"),
+    )
+    .await?;
 
     let status = resp.status();
     if !status.is_success() {
@@ -246,6 +248,51 @@ fn build_input(
 }
 
 // ---------------------------------------------------------------------------
+// Rate-limit / retry helper
+// ---------------------------------------------------------------------------
+
+/// Parse the `Retry-After` header (seconds) from a 429 response.
+fn retry_after(headers: &reqwest::header::HeaderMap) -> Duration {
+    headers
+        .get(reqwest::header::RETRY_AFTER)
+        .and_then(|v| v.to_str().ok())
+        .and_then(|v| v.parse::<u64>().ok())
+        .map(Duration::from_secs)
+        .unwrap_or(DEFAULT_RETRY_DELAY)
+}
+
+/// Execute a request builder, retrying on 429 with backoff.
+async fn send_with_retry(
+    build_request: impl Fn() -> reqwest::RequestBuilder,
+    context: &str,
+) -> Result<reqwest::Response> {
+    for attempt in 0..=MAX_RETRIES {
+        let resp = build_request()
+            .send()
+            .await
+            .with_context(|| format!("Failed to {context}"))?;
+
+        if resp.status() != reqwest::StatusCode::TOO_MANY_REQUESTS {
+            return Ok(resp);
+        }
+
+        if attempt == MAX_RETRIES {
+            let text = resp.text().await.unwrap_or_default();
+            bail!("Rate limited after {MAX_RETRIES} retries: {text}");
+        }
+
+        let delay = retry_after(resp.headers());
+        eprintln!(
+            "Rate limited (429). Waiting {}s before retry ({}/{MAX_RETRIES})…",
+            delay.as_secs(),
+            attempt + 1
+        );
+        tokio::time::sleep(delay).await;
+    }
+    unreachable!()
+}
+
+// ---------------------------------------------------------------------------
 // Core logic
 // ---------------------------------------------------------------------------
 
@@ -259,14 +306,14 @@ async fn create_prediction(
         version: version.to_string(),
         input,
     };
+    let url = format!("{REPLICATE_API_BASE}/predictions");
+    let token = token.to_string();
 
-    let resp = client
-        .post(format!("{REPLICATE_API_BASE}/predictions"))
-        .bearer_auth(token)
-        .json(&body)
-        .send()
-        .await
-        .context("Failed to send prediction request")?;
+    let resp = send_with_retry(
+        || client.post(&url).bearer_auth(&token).json(&body),
+        "send prediction request",
+    )
+    .await?;
 
     let status = resp.status();
     if !status.is_success() {
@@ -305,12 +352,11 @@ async fn poll_prediction(
 
         tokio::time::sleep(POLL_INTERVAL).await;
 
-        let resp = client
-            .get(&poll_url)
-            .bearer_auth(token)
-            .send()
-            .await
-            .context("Failed to poll prediction")?;
+        let resp = send_with_retry(
+            || client.get(&poll_url).bearer_auth(token),
+            "poll prediction",
+        )
+        .await?;
 
         let status = resp.status();
         if !status.is_success() {
