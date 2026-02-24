@@ -1,6 +1,6 @@
 [package]
 name = "imgen"
-version = "0.2.2"
+version = "0.3.0"
 edition = "2021"
 description = "CLI tool to generate images via the Replicate API"
 license = "MIT"

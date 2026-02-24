@@ -134,6 +134,8 @@ struct ResolvedModel {
     version: String,
     /// Allowed aspect_ratio values from the model schema, if the model uses aspect_ratio.
     aspect_ratios: Option<Vec<String>>,
+    /// Whether the model supports output_format / output_quality parameters.
+    has_output_format: bool,
 }
 
 async fn resolve_model(
@@ -165,23 +167,52 @@ async fn resolve_model(
         .latest_version
         .context(format!("Model {model} has no published version"))?;
 
-    let aspect_ratios = ver
-        .openapi_schema
-        .as_ref()
+    let schema = ver.openapi_schema.as_ref();
+
+    let aspect_ratios = schema
         .and_then(|s| s.pointer("/components/schemas/Input/properties/aspect_ratio"))
         .and_then(|ar| {
-            ar.get("enum")
-                .and_then(|e| e.as_array())
-                .map(|vals| {
+            // Try direct enum first.
+            if let Some(vals) = ar.get("enum").and_then(|e| e.as_array()) {
+                return Some(
                     vals.iter()
                         .filter_map(|v| v.as_str().map(String::from))
-                        .collect::<Vec<_>>()
-                })
+                        .collect::<Vec<_>>(),
+                );
+            }
+            // Follow $ref (may be wrapped in allOf).
+            let ref_path = ar
+                .get("allOf")
+                .and_then(|a| a.as_array())
+                .and_then(|a| a.first())
+                .and_then(|o| o.get("$ref"))
+                .and_then(|r| r.as_str())
+                .or_else(|| ar.get("$ref").and_then(|r| r.as_str()));
+
+            if let Some(ref_str) = ref_path {
+                // "#/components/schemas/aspect_ratio" → "/components/schemas/aspect_ratio"
+                let json_ptr = ref_str.trim_start_matches('#');
+                if let Some(referenced) = schema?.pointer(json_ptr) {
+                    if let Some(vals) = referenced.get("enum").and_then(|e| e.as_array()) {
+                        return Some(
+                            vals.iter()
+                                .filter_map(|v| v.as_str().map(String::from))
+                                .collect::<Vec<_>>(),
+                        );
+                    }
+                }
+            }
+            None
         });
+
+    let has_output_format = schema
+        .and_then(|s| s.pointer("/components/schemas/Input/properties/output_format"))
+        .is_some();
 
     Ok(ResolvedModel {
         version: ver.id,
         aspect_ratios,
+        has_output_format,
     })
 }
 
@@ -216,9 +247,10 @@ fn build_input(
     prompt: &str,
     width: u32,
     height: u32,
-    aspect_ratios: &Option<Vec<String>>,
+    resolved: &ResolvedModel,
+    webp_quality: Option<f32>,
 ) -> serde_json::Value {
-    match aspect_ratios {
+    let mut input = match &resolved.aspect_ratios {
         Some(ratios) => {
             let ratio = best_aspect_ratio(width, height, ratios);
             if ratio == "custom" {
@@ -244,7 +276,21 @@ fn build_input(
                 "height": height,
             })
         }
+    };
+
+    // If the model supports output_format, tell it what format/quality we want
+    // so the API returns the right format directly (avoiding local re-encoding).
+    if resolved.has_output_format {
+        let map = input.as_object_mut().unwrap();
+        if let Some(quality) = webp_quality {
+            map.insert("output_format".into(), serde_json::json!("webp"));
+            map.insert("output_quality".into(), serde_json::json!(quality as u32));
+        } else {
+            map.insert("output_format".into(), serde_json::json!("png"));
+        }
     }
+
+    input
 }
 
 // ---------------------------------------------------------------------------
@@ -471,7 +517,7 @@ async fn generate_image(
     webp_quality: Option<f32>,
 ) -> Result<()> {
     eprintln!("Creating prediction for: \"{prompt}\"");
-    let input = build_input(prompt, width, height, &resolved.aspect_ratios);
+    let input = build_input(prompt, width, height, resolved, webp_quality);
     let pred = create_prediction(client, token, &resolved.version, input).await?;
     eprintln!("Prediction {} created (status: {})", pred.id, pred.status);
 
@@ -482,19 +528,23 @@ async fn generate_image(
         poll_prediction(client, token, &pred).await?
     };
 
-    // When WebP conversion is requested, always download to a temporary .png
-    // first so the conversion produces a distinct output file.
-    let download_path;
-    if webp_quality.is_some() && out.extension().is_some_and(|e| e == "webp") {
-        download_path = out.with_extension("png");
+    // If the model handles output_format natively, the API already returns the
+    // right format — no local conversion needed.
+    let needs_local_webp = webp_quality.is_some() && !resolved.has_output_format;
+
+    // When local WebP conversion is needed, download to a temporary .png first
+    // so the conversion produces a distinct output file.
+    let download_path = if needs_local_webp && out.extension().is_some_and(|e| e == "webp") {
+        out.with_extension("png")
     } else {
-        download_path = out.to_path_buf();
-    }
+        out.to_path_buf()
+    };
 
     eprintln!("Downloading image…");
     download_image(client, &image_url, &download_path).await?;
 
-    if let Some(quality) = webp_quality {
+    if needs_local_webp {
+        let quality = webp_quality.unwrap();
         eprintln!("Converting to WebP (quality {quality})…");
         let webp_path = convert_to_webp(&download_path, quality)?;
         eprintln!("Saved to {}", webp_path.display());
@@ -531,12 +581,13 @@ async fn main() -> Result<()> {
             eprintln!("Resolving model {model}…");
             let resolved = resolve_model(&client, &token, model).await?;
             eprintln!(
-                "  version: {}…  aspect_ratio: {}",
+                "  version: {}…  aspect_ratio: {}  output_format: {}",
                 resolved.version.get(..12).unwrap_or(&resolved.version),
                 match &resolved.aspect_ratios {
                     Some(ratios) => ratios.join(", "),
-                    None => "no".into(),
-                }
+                    None => "none".into(),
+                },
+                if resolved.has_output_format { "yes" } else { "no" },
             );
             model_cache.insert(model.to_string(), resolved);
         }
