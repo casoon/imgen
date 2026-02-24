@@ -18,7 +18,11 @@ Any Replicate model that takes a `prompt` and outputs an image URL works. The mo
 | `stability-ai/sdxl` | Stable Diffusion XL | ~5s | poor |
 | `stability-ai/stable-diffusion-3` | Stable Diffusion 3 | ~5s | moderate |
 
-Models that use `aspect_ratio` are handled transparently -- the tool reads each model's schema from the API and picks the best matching ratio for your `--width` and `--height`. Models that support `custom` aspect ratios get exact pixel dimensions; models with fixed ratios (e.g. `16:9`, `3:4`) get the closest match automatically.
+Aspect ratios are handled transparently. imgen reads each model's OpenAPI schema from the API and determines whether it uses `aspect_ratio` or raw `width`/`height` parameters:
+
+- **`custom` supported** (e.g. FLUX Pro): exact pixel dimensions are sent as-is.
+- **Fixed ratios only** (e.g. `16:9`, `3:4`, `1:1`): the closest matching ratio is selected automatically from the model's allowed values.
+- **No `aspect_ratio` parameter**: `width` and `height` are passed directly.
 
 ## Installation
 
@@ -120,6 +124,11 @@ Run:
 imgen --prompt-file prompts.json
 ```
 
+Batch mode features:
+- Progress is printed as `[1/5]`, `[2/5]`, … so you can track the current job.
+- Output directories are created automatically if they don't exist.
+- A failing job does **not** abort the remaining jobs -- all jobs run, and errors are reported at the end.
+
 ### WebP conversion
 
 Convert output to WebP (default quality 80):
@@ -134,7 +143,13 @@ With custom quality (0-100):
 imgen "A sunset" --out sunset.png --webp 60
 ```
 
-The original PNG is replaced by the `.webp` file. Works in batch mode too.
+You can also use `.webp` directly as the output path:
+
+```bash
+imgen "A sunset" --out sunset.webp --webp
+```
+
+Models that support server-side format selection (e.g. `flux-1.1-pro`) deliver the WebP directly from the API -- no local conversion needed. For all other models, imgen converts locally using the `webp` crate and replaces the original file. Works in batch mode too (via `defaults` or per-job `webp` field).
 
 ### All options
 
@@ -154,6 +169,14 @@ Options:
   -h, --help                Print help
   -V, --version             Print version
 ```
+
+### Rate limiting & timeouts
+
+imgen handles Replicate API rate limits automatically:
+
+- On HTTP `429 Too Many Requests`, the `Retry-After` header is respected (fallback: 10 seconds).
+- Up to 5 retries per request before giving up.
+- Each image generation times out after 120 seconds of polling (poll interval: 2 seconds).
 
 ## JSON schema
 
