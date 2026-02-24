@@ -434,22 +434,28 @@ async fn download_image(client: &Client, url: &str, path: &Path) -> Result<()> {
     Ok(())
 }
 
-fn convert_to_webp(png_path: &Path, quality: f32) -> Result<PathBuf> {
-    let img = image::open(png_path)
-        .with_context(|| format!("Failed to open {} for WebP conversion", png_path.display()))?;
+fn convert_to_webp(src_path: &Path, quality: f32) -> Result<PathBuf> {
+    let img = image::ImageReader::open(src_path)
+        .with_context(|| format!("Failed to open {} for WebP conversion", src_path.display()))?
+        .with_guessed_format()
+        .context("Failed to guess image format")?
+        .decode()
+        .with_context(|| format!("Failed to decode {}", src_path.display()))?;
 
     let encoder = webp::Encoder::from_image(&img)
         .map_err(|e| anyhow::anyhow!("WebP encoder error: {e}"))?;
 
     let webp_data = encoder.encode(quality);
 
-    let webp_path = png_path.with_extension("webp");
+    let webp_path = src_path.with_extension("webp");
     std::fs::write(&webp_path, &*webp_data)
         .with_context(|| format!("Failed to write {}", webp_path.display()))?;
 
-    // Remove the original PNG after successful conversion.
-    std::fs::remove_file(png_path)
-        .with_context(|| format!("Failed to remove {}", png_path.display()))?;
+    // Remove the original file if it differs from the output path.
+    if webp_path != src_path {
+        std::fs::remove_file(src_path)
+            .with_context(|| format!("Failed to remove {}", src_path.display()))?;
+    }
 
     Ok(webp_path)
 }
@@ -476,12 +482,21 @@ async fn generate_image(
         poll_prediction(client, token, &pred).await?
     };
 
+    // When WebP conversion is requested, always download to a temporary .png
+    // first so the conversion produces a distinct output file.
+    let download_path;
+    if webp_quality.is_some() && out.extension().is_some_and(|e| e == "webp") {
+        download_path = out.with_extension("png");
+    } else {
+        download_path = out.to_path_buf();
+    }
+
     eprintln!("Downloading image…");
-    download_image(client, &image_url, out).await?;
+    download_image(client, &image_url, &download_path).await?;
 
     if let Some(quality) = webp_quality {
         eprintln!("Converting to WebP (quality {quality})…");
-        let webp_path = convert_to_webp(out, quality)?;
+        let webp_path = convert_to_webp(&download_path, quality)?;
         eprintln!("Saved to {}", webp_path.display());
     } else {
         eprintln!("Saved to {}", out.display());
