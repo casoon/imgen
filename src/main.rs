@@ -531,11 +531,15 @@ async fn generate_image(
     // If the model handles output_format natively, the API already returns the
     // right format — no local conversion needed.
     let needs_local_webp = webp_quality.is_some() && !resolved.has_output_format;
+    let server_side_webp = webp_quality.is_some() && resolved.has_output_format;
 
     // When local WebP conversion is needed, download to a temporary .png first
     // so the conversion produces a distinct output file.
     let download_path = if needs_local_webp && out.extension().is_some_and(|e| e == "webp") {
         out.with_extension("png")
+    } else if server_side_webp && out.extension().is_some_and(|e| e != "webp") {
+        // API delivers WebP — ensure the file extension matches the actual format.
+        out.with_extension("webp")
     } else {
         out.to_path_buf()
     };
@@ -549,7 +553,7 @@ async fn generate_image(
         let webp_path = convert_to_webp(&download_path, quality)?;
         eprintln!("Saved to {}", webp_path.display());
     } else {
-        eprintln!("Saved to {}", out.display());
+        eprintln!("Saved to {}", download_path.display());
     }
 
     Ok(())

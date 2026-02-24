@@ -134,20 +134,16 @@ Batch mode features:
 Convert output to WebP (default quality 80):
 
 ```bash
-imgen "A sunset" --out sunset.png --webp
+imgen "A sunset" --out sunset.webp --webp
 ```
 
 With custom quality (0-100):
 
 ```bash
-imgen "A sunset" --out sunset.png --webp 60
+imgen "A sunset" --out sunset.webp --webp 60
 ```
 
-You can also use `.webp` directly as the output path:
-
-```bash
-imgen "A sunset" --out sunset.webp --webp
-```
+The output file always gets a `.webp` extension regardless of the `--out` value. For example, `--out sunset.png --webp` produces `sunset.webp`.
 
 Models that support server-side format selection (e.g. `flux-1.1-pro`) deliver the WebP directly from the API -- no local conversion needed. For all other models, imgen converts locally using the `webp` crate and replaces the original file. Works in batch mode too (via `defaults` or per-job `webp` field).
 
