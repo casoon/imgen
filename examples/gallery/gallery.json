@@ -1,0 +1,75 @@
+{
+  "note": "Generated once with imgen from a batch prompt file (February 2026) and committed, because generation needs a Replicate API token. Prompts, model and size are copied unchanged from that file. The model returned 1024x1024 PNGs; they were converted to WebP (cwebp -q 80) for the site. The command reproduces the request; the model is not seeded, so a new run gives a different image.",
+  "images": [
+    {
+      "file": "ki-bilder-kommandozeile-mac-api-lokal.webp",
+      "title": "Laptop with a terminal",
+      "alt": "Isometric 3D illustration of a laptop on a glowing platform with a terminal window on the screen and colourful ribbons, bubbles and particles bursting out behind it, on a dark grid. At the top the glowing headline “Ki-Bilder per Kommandozeile”.",
+      "prompt": "Bold glowing title text at top: \"KI-Bilder per Kommandozeile\". Vibrant 3D isometric illustration of a sleek laptop with a terminal console on screen, surrounded by colorful AI-generated artwork bursting out of the screen like magic portals, floating brushstrokes, light particles, and holographic imagery swirling around. Dark moody background with neon accent colors purple and cyan, digital art style, dramatic lighting",
+      "model": "ideogram-ai/ideogram-v3-quality",
+      "parameters": { "width": 1000, "height": 1080 },
+      "result": { "width": 1024, "height": 1024 },
+      "command": "imgen 'Bold glowing title text at top: \"KI-Bilder per Kommandozeile\". Vibrant 3D isometric illustration of a sleek laptop with a terminal console on screen, surrounded by colorful AI-generated artwork bursting out of the screen like magic portals, floating brushstrokes, light particles, and holographic imagery swirling around. Dark moody background with neon accent colors purple and cyan, digital art style, dramatic lighting' \\\n  --model ideogram-ai/ideogram-v3-quality \\\n  --width 1000 --height 1080 \\\n  --out ki-bilder-kommandozeile-mac-api-lokal.png"
+    },
+    {
+      "file": "cloud-exit-strategie-souveraene-architektur.webp",
+      "title": "Server rack and clouds",
+      "alt": "Isometric 3D server rack under a holographic globe showing Europe, with glowing cables running from two clouds on the left and right and white arrows pointing at the rack, dark background with blue and red light. At the top the headline “RAUS AUS DER CLOUD?” in glowing white capitals.",
+      "prompt": "Bold glowing title text at top: \"Raus aus der Cloud?\". 3D isometric server rack with glowing escape route arrows pointing outward, a European map hologram floating behind it, data streams breaking free from cloud symbols. Dark background with electric blue and red neon accents, digital art style, dramatic lighting",
+      "model": "ideogram-ai/ideogram-v3-quality",
+      "parameters": { "width": 1000, "height": 1080 },
+      "result": { "width": 1024, "height": 1024 },
+      "command": "imgen 'Bold glowing title text at top: \"Raus aus der Cloud?\". 3D isometric server rack with glowing escape route arrows pointing outward, a European map hologram floating behind it, data streams breaking free from cloud symbols. Dark background with electric blue and red neon accents, digital art style, dramatic lighting' \\\n  --model ideogram-ai/ideogram-v3-quality \\\n  --width 1000 --height 1080 \\\n  --out cloud-exit-strategie-souveraene-architektur.png"
+    },
+    {
+      "file": "supply-chain-security-karriere-entwickler.webp",
+      "title": "Staircase of code blocks",
+      "alt": "3D staircase built from blue and green blocks rising to the right, with floating code windows, shield icons and padlocks beside it, on a dark grid floor. At the top the headline “SECURITY ALS KARRIEREPFAD” in glowing white capitals with a green glow.",
+      "prompt": "Bold glowing title text at top: \"Security als Karrierepfad\". 3D isometric rising staircase made of code blocks and shield icons, each step glowing brighter toward the top, terminal windows and lock symbols floating alongside the ascending path. Dark background with electric blue and green neon accents, digital art style, dramatic lighting",
+      "model": "ideogram-ai/ideogram-v3-quality",
+      "parameters": { "width": 1000, "height": 1080 },
+      "result": { "width": 1024, "height": 1024 },
+      "command": "imgen 'Bold glowing title text at top: \"Security als Karrierepfad\". 3D isometric rising staircase made of code blocks and shield icons, each step glowing brighter toward the top, terminal windows and lock symbols floating alongside the ascending path. Dark background with electric blue and green neon accents, digital art style, dramatic lighting' \\\n  --model ideogram-ai/ideogram-v3-quality \\\n  --width 1000 --height 1080 \\\n  --out supply-chain-security-karriere-entwickler.png"
+    },
+    {
+      "file": "warum-sich-design-systems-rechnen.webp",
+      "title": "Grid of UI components",
+      "alt": "Isometric grid of rounded UI component tiles – cards, buttons and groups of coloured dots in red, cyan, yellow and grey – on a dark grid, framed by a neon line fading from cyan to purple. At the top the headline “Design Systems rechnen Sich” in glowing white letters.",
+      "prompt": "Bold glowing title text at top: \"Design Systems rechnen sich\". 3D isometric grid of UI components — buttons, cards, color swatches, typography tokens — floating in organized layers, connected by glowing lines forming a system. Dark background with cyan and magenta neon accents, flat vector art style, dramatic lighting",
+      "model": "ideogram-ai/ideogram-v3-quality",
+      "parameters": { "width": 1000, "height": 1080 },
+      "result": { "width": 1024, "height": 1024 },
+      "command": "imgen 'Bold glowing title text at top: \"Design Systems rechnen sich\". 3D isometric grid of UI components — buttons, cards, color swatches, typography tokens — floating in organized layers, connected by glowing lines forming a system. Dark background with cyan and magenta neon accents, flat vector art style, dramatic lighting' \\\n  --model ideogram-ai/ideogram-v3-quality \\\n  --width 1000 --height 1080 \\\n  --out warum-sich-design-systems-rechnen.png"
+    },
+    {
+      "file": "tod-der-vererbung-composition-traits-protokolle.webp",
+      "title": "Stone blocks turning into puzzle pieces",
+      "alt": "Rows of cracked stone blocks on the left crumbling into a pile of rubble, turning into blue puzzle pieces on the right, with red and blue neon lines in the lower corners. At the top the headline “DER TOD DER VERERBUNG” in glowing yellow capitals.",
+      "prompt": "Bold glowing title text at top: \"Der Tod der Vererbung\". Crumbling 3D class hierarchy tree shattering into fragments, modern glowing composition blocks and trait puzzle pieces assembling from the debris, energy sparks at the transition point. Dark background with red and electric blue neon accents, digital art style, dramatic lighting",
+      "model": "ideogram-ai/ideogram-v3-quality",
+      "parameters": { "width": 1000, "height": 1080 },
+      "result": { "width": 1024, "height": 1024 },
+      "command": "imgen 'Bold glowing title text at top: \"Der Tod der Vererbung\". Crumbling 3D class hierarchy tree shattering into fragments, modern glowing composition blocks and trait puzzle pieces assembling from the debris, energy sparks at the transition point. Dark background with red and electric blue neon accents, digital art style, dramatic lighting' \\\n  --model ideogram-ai/ideogram-v3-quality \\\n  --width 1000 --height 1080 \\\n  --out tod-der-vererbung-composition-traits-protokolle.png"
+    },
+    {
+      "file": "modernisierung-ist-kein-ziel.webp",
+      "title": "Rocket and old machine",
+      "alt": "Isometric scene of a white rocket standing idle next to a small metal machine on wheels that shoots a stream of orange sparks, on a dark tiled floor with blue neon edges and more sparks on the left. At the top the headline “MODERNISIERUNG IST KEIN ZIEL” in glowing white capitals.",
+      "prompt": "Bold glowing title text at top: \"Modernisierung ist kein Ziel\". 3D isometric illustration of a shiny new rocket standing idle next to a reliable old machine that is actually running and producing output, sparks and gears in motion around the old machine. Dark background with amber and electric blue neon accents, digital art style, dramatic lighting",
+      "model": "ideogram-ai/ideogram-v3-quality",
+      "parameters": { "width": 1000, "height": 1080 },
+      "result": { "width": 1024, "height": 1024 },
+      "command": "imgen 'Bold glowing title text at top: \"Modernisierung ist kein Ziel\". 3D isometric illustration of a shiny new rocket standing idle next to a reliable old machine that is actually running and producing output, sparks and gears in motion around the old machine. Dark background with amber and electric blue neon accents, digital art style, dramatic lighting' \\\n  --model ideogram-ai/ideogram-v3-quality \\\n  --width 1000 --height 1080 \\\n  --out modernisierung-ist-kein-ziel.png"
+    },
+    {
+      "file": "ki-slop-test-wann-keine-ki-nutzen.webp",
+      "title": "Conveyor belt with a stop sign",
+      "alt": "Conveyor belt carrying identical paper documents labelled “AI”, a large red octagonal STOP sign on the belt and a bin of shredded paper behind it, more documents flying through the air, dark red and purple background. At the top the headline “DER KI-SLOP-TEST” in glowing white capitals.",
+      "prompt": "Bold glowing title text at top: \"Der KI-Slop-Test\". 3D illustration of a conveyor belt producing identical generic documents, a large red STOP sign slamming down on the belt, rejected AI slop flying off into a glowing trash vortex. Dark background with red and purple neon accents, digital art style, dramatic lighting",
+      "model": "ideogram-ai/ideogram-v3-quality",
+      "parameters": { "width": 1000, "height": 1080 },
+      "result": { "width": 1024, "height": 1024 },
+      "command": "imgen 'Bold glowing title text at top: \"Der KI-Slop-Test\". 3D illustration of a conveyor belt producing identical generic documents, a large red STOP sign slamming down on the belt, rejected AI slop flying off into a glowing trash vortex. Dark background with red and purple neon accents, digital art style, dramatic lighting' \\\n  --model ideogram-ai/ideogram-v3-quality \\\n  --width 1000 --height 1080 \\\n  --out ki-slop-test-wann-keine-ki-nutzen.png"
+    }
+  ]
+}
