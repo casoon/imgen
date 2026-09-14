@@ -1,0 +1,2 @@
+Error: Either a prompt argument or --prompt-file is required
+exit code 1

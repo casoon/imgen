@@ -1,0 +1,2 @@
+Error: Prompt file contains no jobs
+exit code 1

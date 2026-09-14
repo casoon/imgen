@@ -1,0 +1,75 @@
+---
+title: Installation
+description: Install imgen with Homebrew, from a prebuilt release, or build it from source with Cargo.
+order: 1
+---
+
+<Tabs
+  label="Installation method"
+  tabs={[
+    { id: 'brew', label: 'Homebrew' },
+    { id: 'release', label: 'Release binary' },
+    { id: 'cargo', label: 'Cargo' },
+    { id: 'source', label: 'Source' },
+  ]}
+>
+<div slot="brew">
+
+```sh
+brew tap casoon/tap
+brew install imgen
+```
+
+Works on macOS and Linux. The formula is updated by the release workflow for every tag.
+
+</div>
+<div slot="release">
+
+Each [GitHub release](https://github.com/casoon/imgen/releases) has four archives:
+
+| Archive | Platform |
+| --- | --- |
+| `imgen-aarch64-apple-darwin.tar.gz` | macOS, Apple silicon |
+| `imgen-x86_64-apple-darwin.tar.gz` | macOS, Intel |
+| `imgen-aarch64-unknown-linux-gnu.tar.gz` | Linux, arm64 |
+| `imgen-x86_64-unknown-linux-gnu.tar.gz` | Linux, x86_64 |
+
+Each archive contains the single `imgen` binary. Unpack it into a directory on your `PATH`:
+
+```sh
+tar xzf imgen-aarch64-apple-darwin.tar.gz
+mv imgen ~/.local/bin/
+```
+
+</div>
+<div slot="cargo">
+
+```sh
+cargo install --git https://github.com/casoon/imgen
+```
+
+Needs a Rust toolchain. TLS uses rustls, so no OpenSSL is required.
+
+</div>
+<div slot="source">
+
+```sh
+git clone https://github.com/casoon/imgen.git
+cd imgen
+cargo install --path .
+```
+
+</div>
+</Tabs>
+
+<Callout type="caution">imgen is not published on crates.io. The crate named `imgen` there is a
+different project, so `cargo install imgen` installs something else.</Callout>
+
+## Verify the install
+
+```sh
+imgen --version
+# imgen 0.3.1
+```
+
+Next, set up your [API token](../api-token/).

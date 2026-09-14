@@ -1,0 +1,16 @@
+CLI tool to generate images via the Replicate API
+
+Usage: imgen [OPTIONS] [PROMPT]
+
+Arguments:
+  [PROMPT]  Text prompt for image generation (ignored when --prompt-file is used)
+
+Options:
+      --prompt-file <FILE>  JSON file containing an array of jobs
+      --model <MODEL>       Replicate model in "owner/name" format [default: black-forest-labs/flux-1.1-pro]
+      --width <WIDTH>       Output width in pixels [default: 1024]
+      --height <HEIGHT>     Output height in pixels [default: 768]
+      --out <OUT>           Output file path (only used for single-prompt mode) [default: output.png]
+      --webp [<WEBP>]       Convert output to WebP with given quality (0-100). Omit value for default 80
+  -h, --help                Print help
+  -V, --version             Print version

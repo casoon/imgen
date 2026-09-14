@@ -1,0 +1,4 @@
+{
+  "defaults": { "model": "black-forest-labs/flux-schnell" },
+  "jobs": []
+}

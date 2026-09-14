@@ -1,0 +1,6 @@
+Error: Failed to parse prompt file examples/prompt-files/missing-out.json
+
+Caused by:
+    0: Failed to parse jobs array
+    1: missing field `out`
+exit code 1

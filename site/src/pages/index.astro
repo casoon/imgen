@@ -1,0 +1,95 @@
+---
+import {
+  Badge,
+  Badges,
+  BuildOutput,
+  CodeBlock,
+  Facts,
+  Features,
+  Hero,
+  Install,
+  Quickstart,
+  Terminal,
+} from '@casoon/pages-theme/components';
+import Base from '@casoon/pages-theme/layouts/Base.astro';
+import help from '../../../examples/help.txt?raw';
+import missingOut from '../../../examples/missing-out.txt?raw';
+
+const quickstart = `# Token from replicate.com/account/api-tokens
+export REPLICATE_API_TOKEN="r8_your_token_here"
+
+# One image with the default model (FLUX 1.1 Pro)
+imgen "A sunset over the ocean" --out sunset.png
+
+# Many images from a JSON file
+imgen --prompt-file prompts.json`;
+---
+
+<Base>
+  <Hero
+    title="Images from the command line."
+    lead="imgen sends a prompt to any image model on Replicate, waits for the prediction and saves the result as PNG or WebP. It reads each model's schema to send the size the way that model expects, and runs whole batches from one JSON file."
+  >
+    <Install
+      commands={[
+        { label: 'brew', command: 'brew install casoon/tap/imgen' },
+        { label: 'cargo', command: 'cargo install --git https://github.com/casoon/imgen' },
+      ]}
+    />
+    <Badges>
+      <Badge>MIT</Badge>
+      <Badge>v0.3.1</Badge>
+      <Badge>Rust CLI</Badge>
+      <Badge>macOS + Linux</Badge>
+    </Badges>
+    <Terminal slot="output" title="imgen --help" dots ansi={help} />
+  </Hero>
+
+  <Facts
+    items={[
+      { value: '3', label: 'ways to send the image size, picked from the model schema' },
+      { value: '2', label: 'prompt-file formats: plain array or defaults + jobs' },
+      { value: '5', label: 'retries on HTTP 429, honouring Retry-After' },
+      { value: '4', label: 'prebuilt release targets' },
+    ]}
+  />
+
+  <Features
+    items={[
+      {
+        title: 'Any Replicate image model',
+        body: 'Pass owner/name with --model or per job. imgen resolves the latest version itself; FLUX 1.1 Pro is the default.',
+      },
+      {
+        title: 'Schema detection, not model lists',
+        body: 'The model’s OpenAPI schema decides whether imgen sends exact pixels, the closest allowed aspect ratio, or plain width and height.',
+      },
+      {
+        title: 'Batches that keep going',
+        body: 'A JSON file runs many jobs with shared defaults. Progress shows as [2/5], and a failed job does not stop the rest.',
+      },
+      {
+        title: 'WebP without double encoding',
+        body: 'Models with server-side format selection deliver WebP directly. All others are converted locally at the quality you choose.',
+      },
+    ]}
+  />
+
+  <BuildOutput
+    caption="Captured from the current binary by examples/capture.sh. Prompt files are validated before the first API request, so a broken batch costs nothing."
+    file="examples/missing-out.txt"
+  >
+    <Terminal title="imgen --prompt-file examples/prompt-files/missing-out.json" ansi={missingOut} />
+  </BuildOutput>
+
+  <Quickstart
+    lead="Three steps from install to a saved image. The documentation covers models, schema detection and batch files."
+    steps={[
+      'Install imgen with Homebrew, a release archive or Cargo.',
+      'Export your Replicate token as <code>REPLICATE_API_TOKEN</code>.',
+      'Run <code>imgen</code> with a prompt, or with <code>--prompt-file</code> for a batch.',
+    ]}
+  >
+    <CodeBlock code={quickstart} lang="shell" title="terminal" label="Shell" />
+  </Quickstart>
+</Base>

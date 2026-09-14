@@ -2,6 +2,8 @@
 
 CLI tool to generate images via the [Replicate API](https://replicate.com/). Works with any image generation model on Replicate.
 
+**Website and documentation:** [casoon.github.io/imgen](https://casoon.github.io/imgen/)
+
 Default model: [black-forest-labs/flux-1.1-pro](https://replicate.com/black-forest-labs/flux-1.1-pro)
 
 ## Supported models
