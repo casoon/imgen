@@ -12,8 +12,17 @@ import {
   Terminal,
 } from '@casoon/pages-theme/components';
 import Base from '@casoon/pages-theme/layouts/Base.astro';
+import { url } from '@casoon/pages-theme/lib/url.ts';
 import help from '../../../examples/help.txt?raw';
+import gallery from '../../../examples/gallery/gallery.json';
 import missingOut from '../../../examples/missing-out.txt?raw';
+import { galleryImages } from '../showcase';
+
+const strip = gallery.images.slice(0, 4).map((img) => ({
+  ...img,
+  image: galleryImages[`../../examples/gallery/${img.file}`],
+  href: url(`showcase/gallery-${img.file.replace(/\.webp$/, '')}/`),
+}));
 
 const quickstart = `# Token from replicate.com/account/api-tokens
 export REPLICATE_API_TOKEN="r8_your_token_here"
@@ -82,6 +91,31 @@ imgen --prompt-file prompts.json`;
     <Terminal title="imgen --prompt-file examples/prompt-files/missing-out.json" ansi={missingOut} />
   </BuildOutput>
 
+  <BuildOutput
+    heading="Made with imgen"
+    caption="Generated once with imgen and ideogram-ai/ideogram-v3-quality, then committed: generation needs a Replicate API token, so these images are not rebuilt with the site. Prompts and commands are in the showcase."
+    file="examples/gallery/"
+  >
+    <ul class="strip">
+      {
+        strip.map((img) => (
+          <li>
+            <a href={img.href}>
+              <img
+                src={img.image?.src}
+                width={img.image?.width}
+                height={img.image?.height}
+                alt={img.alt}
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </BuildOutput>
+
   <Quickstart
     lead="Three steps from install to a saved image. The documentation covers models, schema detection and batch files."
     steps={[
@@ -93,3 +127,24 @@ imgen --prompt-file prompts.json`;
     <CodeBlock code={quickstart} lang="shell" title="terminal" label="Shell" />
   </Quickstart>
 </Base>
+
+<style>
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 18px;
+    list-style: none;
+  }
+  .strip a {
+    display: block;
+    border-radius: 10px;
+  }
+  .strip img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+</style>
