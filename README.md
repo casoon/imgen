@@ -2,6 +2,9 @@
 
 CLI tool to generate images via the [Replicate API](https://replicate.com/). Works with any image generation model on Replicate.
 
+**Status:** imgen is feature-complete and no longer actively developed. It works as documented
+against the Replicate API; issues and pull requests may not be answered.
+
 **Website and documentation:** [casoon.github.io/imgen](https://casoon.github.io/imgen/)
 
 Default model: [black-forest-labs/flux-1.1-pro](https://replicate.com/black-forest-labs/flux-1.1-pro)
@@ -28,24 +31,33 @@ Aspect ratios are handled transparently. imgen reads each model's OpenAPI schema
 
 ## Installation
 
-### Homebrew (macOS / Linux)
+### Install script (macOS / Linux)
 
 ```bash
-brew tap casoon/tap
-brew install imgen
+curl -fsSL https://raw.githubusercontent.com/casoon/imgen/master/install.sh | sh
+```
+
+Downloads the archive for your platform from the latest release, verifies it against the published
+`SHA256SUMS` and installs the binary to `/usr/local/bin`. Set `IMGEN_INSTALL_DIR` to install
+somewhere else, or `VERSION` to pin a release:
+
+```bash
+IMGEN_INSTALL_DIR="$HOME/.local/bin" VERSION=0.3.1 sh install.sh
 ```
 
 ### From source
 
 ```bash
+cargo install --git https://github.com/casoon/imgen
+```
+
+Or from a checkout:
+
+```bash
 cargo install --path .
 ```
 
-Or build manually:
-
-```bash
-cargo build --release
-```
+imgen is not on crates.io — the crate named `imgen` there is a different project.
 
 ## Setup
 

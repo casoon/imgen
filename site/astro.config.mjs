@@ -17,7 +17,7 @@ export default defineConfig({
       branch: 'master',
       packages: [
         { label: 'Releases', href: 'https://github.com/casoon/imgen/releases' },
-        { label: 'Homebrew tap', href: 'https://github.com/casoon/homebrew-tap' },
+        { label: 'Install script', href: 'https://github.com/casoon/imgen/blob/master/install.sh' },
       ],
       docsGroups: {
         'getting-started': 'Getting started',

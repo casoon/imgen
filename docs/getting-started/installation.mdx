@@ -1,26 +1,38 @@
 ---
 title: Installation
-description: Install imgen with Homebrew, from a prebuilt release, or build it from source with Cargo.
+description: Install imgen with the install script, from a prebuilt release, or build it from source with Cargo.
 order: 1
 ---
 
 <Tabs
   label="Installation method"
   tabs={[
-    { id: 'brew', label: 'Homebrew' },
+    { id: 'script', label: 'Install script' },
     { id: 'release', label: 'Release binary' },
     { id: 'cargo', label: 'Cargo' },
     { id: 'source', label: 'Source' },
   ]}
 >
-<div slot="brew">
+<div slot="script">
 
 ```sh
-brew tap casoon/tap
-brew install imgen
+curl -fsSL https://raw.githubusercontent.com/casoon/imgen/master/install.sh | sh
 ```
 
-Works on macOS and Linux. The formula is updated by the release workflow for every tag.
+Works on macOS and Linux. The script picks the archive for your platform from the latest release,
+verifies it against the published `SHA256SUMS` and installs the binary to `/usr/local/bin`.
+
+Two environment variables change its behaviour:
+
+| Variable | Effect |
+| --- | --- |
+| `IMGEN_INSTALL_DIR` | Target directory, default `/usr/local/bin` |
+| `VERSION` | Install a specific release instead of the latest one |
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/casoon/imgen/master/install.sh \
+  | IMGEN_INSTALL_DIR="$HOME/.local/bin" VERSION=0.3.1 sh
+```
 
 </div>
 <div slot="release">
@@ -34,7 +46,8 @@ Each [GitHub release](https://github.com/casoon/imgen/releases) has four archive
 | `imgen-aarch64-unknown-linux-gnu.tar.gz` | Linux, arm64 |
 | `imgen-x86_64-unknown-linux-gnu.tar.gz` | Linux, x86_64 |
 
-Each archive contains the single `imgen` binary. Unpack it into a directory on your `PATH`:
+`SHA256SUMS` next to them carries the checksums. Each archive contains the single `imgen` binary.
+Unpack it into a directory on your `PATH`:
 
 ```sh
 tar xzf imgen-aarch64-apple-darwin.tar.gz

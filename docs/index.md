@@ -4,6 +4,9 @@ description: What imgen does, what it needs, and how this documentation is organ
 order: 0
 ---
 
+**Status:** imgen is feature-complete and no longer actively developed. It works as documented
+against the Replicate API; issues and pull requests may not be answered.
+
 imgen is a command-line tool that generates images through the
 [Replicate API](https://replicate.com/). You pass a prompt, it creates a prediction, waits for the
 result and saves the image to disk. A JSON prompt file runs many jobs in one go.
