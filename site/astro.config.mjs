@@ -11,6 +11,7 @@ export default defineConfig({
       name: 'imgen',
       description:
         'A Rust CLI that generates images with any Replicate model, from a single prompt or a JSON batch file.',
+      tagline: 'Image generation CLI for Replicate',
       repo: 'casoon/imgen',
       version: '0.3.1',
       license: 'MIT',
