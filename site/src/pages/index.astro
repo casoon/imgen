@@ -12,6 +12,7 @@ import {
   Terminal,
 } from '@casoon/pages-theme/components';
 import Base from '@casoon/pages-theme/layouts/Base.astro';
+import config from 'virtual:casoon-pages/config';
 import { url } from '@casoon/pages-theme/lib/url.ts';
 import help from '../../../examples/help.txt?raw';
 import gallery from '../../../examples/gallery/gallery.json';
@@ -47,7 +48,7 @@ imgen --prompt-file prompts.json`;
     />
     <Badges>
       <Badge>MIT</Badge>
-      <Badge>v0.3.1</Badge>
+      <Badge>v{config.version}</Badge>
       <Badge>Rust CLI</Badge>
       <Badge>macOS + Linux</Badge>
     </Badges>
