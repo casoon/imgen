@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "type": "flow",
+  "title": "How imgen turns a prompt into an image",
+  "description": "You pass a prompt and a model. imgen resolves the model's latest version on Replicate and reads its input schema. From the schema it decides how to send the size: exact width and height through a custom aspect ratio, the closest allowed aspect ratio, or plain width and height. It then creates a prediction, polls until it has finished, downloads the image and saves it as PNG or WebP.",
+  "source": "src/main.rs (resolve_model, build_input, create_prediction, poll_prediction, download_image), as of 2026-10-26",
+  "width": 1240,
+  "height": 260,
+  "flow": {
+    "nodes": [
+      { "id": "prompt", "label": "Prompt", "sublabel": "argument or prompt file", "kind": "start" },
+      { "id": "schema", "label": "Model schema", "sublabel": "latest version on Replicate", "kind": "io" },
+      { "id": "size", "label": "Fit the size", "sublabel": "pixels, ratio or width/height" },
+      { "id": "prediction", "label": "Prediction", "sublabel": "created, then polled" },
+      { "id": "download", "label": "Download", "kind": "io" },
+      { "id": "saved", "label": "Image saved", "sublabel": "PNG or WebP", "kind": "end" }
+    ],
+    "edges": [
+      { "from": "prompt", "to": "schema" },
+      { "from": "schema", "to": "size" },
+      { "from": "size", "to": "prediction" },
+      { "from": "prediction", "to": "download" },
+      { "from": "download", "to": "saved" }
+    ],
+    "mainPath": ["prompt", "schema", "size", "prediction", "download", "saved"],
+    "orientation": "landscape"
+  }
+}

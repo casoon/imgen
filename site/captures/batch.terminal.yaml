@@ -1,0 +1,23 @@
+# Plays the captured run in version.txt, run.txt and exit.txt (see capture.sh): a prompt
+# file whose second job has no `out` field is rejected before the first API request.
+version: 1
+terminal:
+  title: imgen
+  cols: 64
+  rows: 17
+  theme: catppuccin-mocha
+steps:
+  - run: imgen --version
+  - show: version.txt
+    lang: text
+  - run: cat jobs.json
+  - show: jobs.json
+    lang: json
+  - run: REPLICATE_API_TOKEN=placeholder imgen --prompt-file jobs.json
+  - wait: 500
+  - show: run.txt
+    lang: text
+  - run: echo $?
+  - show: exit.txt
+    lang: text
+  - wait: 5000

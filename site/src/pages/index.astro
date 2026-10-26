@@ -3,20 +3,21 @@ import {
   Badge,
   Badges,
   BuildOutput,
+  Button,
   CodeBlock,
   Facts,
   Features,
   Hero,
   Install,
   Quickstart,
-  Terminal,
 } from '@casoon/pages-theme/components';
 import Base from '@casoon/pages-theme/layouts/Base.astro';
 import config from 'virtual:casoon-pages/config';
 import { url } from '@casoon/pages-theme/lib/url.ts';
-import help from '../../../examples/help.txt?raw';
 import gallery from '../../../examples/gallery/gallery.json';
-import missingOut from '../../../examples/missing-out.txt?raw';
+// Animated SVG built with castwright from site/captures/batch.terminal.yaml (see capture.sh).
+import batchSvg from '../../captures/batch.svg?url';
+import Diagram from '../components/Diagram.astro';
 import { galleryImages } from '../showcase';
 
 const strip = gallery.images.slice(0, 4).map((img) => ({
@@ -52,7 +53,14 @@ imgen --prompt-file prompts.json`;
       <Badge>Rust CLI</Badge>
       <Badge>macOS + Linux</Badge>
     </Badges>
-    <Terminal slot="output" title="imgen --help" dots ansi={help} />
+    <img
+      slot="output"
+      class="terminal-demo"
+      src={batchSvg}
+      width="561.6"
+      height="350"
+      alt="Terminal: imgen --version prints imgen 0.3.1. cat jobs.json shows a prompt file with two jobs, the second without an out field. imgen --prompt-file jobs.json, run with a placeholder token, stops with Failed to parse prompt file jobs.json, caused by missing field out, before any API request. echo $? prints 1."
+    />
   </Hero>
 
   <Facts
@@ -85,12 +93,27 @@ imgen --prompt-file prompts.json`;
     ]}
   />
 
-  <BuildOutput
-    caption="Captured from the current binary by examples/capture.sh. Prompt files are validated before the first API request, so a broken batch costs nothing."
-    file="examples/missing-out.txt"
-  >
-    <Terminal title="imgen --prompt-file examples/prompt-files/missing-out.json" ansi={missingOut} />
-  </BuildOutput>
+  <section class="how" aria-labelledby="how-heading">
+    <h2 id="how-heading">How it works</h2>
+    <div class="text">
+      <p>
+        Image models on Replicate do not agree on how they take a size. imgen does not keep a
+        list of models: it reads the input schema of the model you name and sends exact pixels,
+        the closest allowed aspect ratio, or plain width and height, whichever the model accepts.
+      </p>
+      <p>
+        Then it creates the prediction, polls until the image is ready and saves it. With
+        <code>--webp</code>, models that can deliver WebP do so directly; for all others imgen
+        converts the download locally.
+      </p>
+    </div>
+    <Diagram name="how-it-works" format="svg" narrow={{ width: 560, height: 760 }} />
+    <div class="links">
+      <Button href={url('docs/guides/schema-detection/')} variant="secondary">Schema detection</Button>
+      <Button href={url('docs/guides/batch-mode/')} variant="secondary">Batch mode</Button>
+      <Button href={url('docs/reference/cli/')} variant="quiet">All options →</Button>
+    </div>
+  </section>
 
   <BuildOutput
     heading="Made with imgen"
@@ -130,6 +153,41 @@ imgen --prompt-file prompts.json`;
 </Base>
 
 <style>
+  /* Never scale the SVG beyond a readable terminal size. */
+  .terminal-demo {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    margin: 0 auto;
+  }
+  .how {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+  .how h2 {
+    margin: 0 0 14px;
+    color: var(--heading);
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .text {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    gap: 0 48px;
+  }
+  .text p {
+    margin: 0 0 16px;
+    font-size: 15.5px;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
   .strip {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr));
