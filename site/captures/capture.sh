@@ -5,7 +5,7 @@
 #   cargo build --release && site/captures/capture.sh
 # The placeholder token only gets imgen past its token check; it is never sent.
 # Rebuild the scene after a capture:
-#   cd site/captures && npx -y -p @casoon/castwright@0.4.0 -p shiki castwright build batch.terminal.yaml --format svg -o .
+#   cd site/captures && npx -y -p @casoon/castwright@0.5.0 -p shiki castwright build batch.terminal.yaml --format svg -o .
 set -uo pipefail
 
 dir="$(cd "$(dirname "$0")" && pwd)"
