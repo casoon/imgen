@@ -5,7 +5,7 @@
   "description": "imgen reads and validates the prompt file first; an invalid file stops the run with exit code 1 before any request. Every distinct model is then resolved once. The jobs run one after another, each with a counter such as [2/5]. A failed job is reported and the next one starts. After the last job imgen exits with code 1 if any job failed, otherwise with code 0.",
   "source": "src/main.rs (main, build_jobs, parse_prompt_file), as of 2026-10-26",
   "width": 720,
-  "height": 880,
+  "height": 780,
   "flow": {
     "nodes": [
       {
@@ -17,7 +17,6 @@
       {
         "id": "valid",
         "label": "Valid?",
-        "sublabel": "checked before any request",
         "kind": "decision"
       },
       {

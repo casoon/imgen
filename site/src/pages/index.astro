@@ -57,9 +57,9 @@ imgen --prompt-file prompts.json`;
       slot="output"
       class="terminal-demo"
       src={batchSvg}
-      width="561.6"
-      height="350"
-      alt="Terminal: imgen --version prints imgen 0.3.1. cat jobs.json shows a prompt file with two jobs, the second without an out field. imgen --prompt-file jobs.json, run with a placeholder token, stops with Failed to parse prompt file jobs.json, caused by missing field out, before any API request. echo $? prints 1."
+      width="410.4"
+      height="404"
+      alt="Terminal: imgen --version prints imgen 0.3.1. cat jobs.json shows a prompt file with two jobs, the second without an out field. With a placeholder token exported, imgen --prompt-file jobs.json stops with Failed to parse prompt file jobs.json, caused by missing field out, before any API request. echo $? prints 1."
     />
   </Hero>
 
@@ -72,52 +72,9 @@ imgen --prompt-file prompts.json`;
     ]}
   />
 
-  <Features
-    items={[
-      {
-        title: 'Any Replicate image model',
-        body: 'Pass owner/name with --model or per job. imgen resolves the latest version itself; FLUX 1.1 Pro is the default.',
-      },
-      {
-        title: 'Schema detection, not model lists',
-        body: 'The model’s OpenAPI schema decides whether imgen sends exact pixels, the closest allowed aspect ratio, or plain width and height.',
-      },
-      {
-        title: 'Batches that keep going',
-        body: 'A JSON file runs many jobs with shared defaults. Progress shows as [2/5], and a failed job does not stop the rest.',
-      },
-      {
-        title: 'WebP without double encoding',
-        body: 'Models with server-side format selection deliver WebP directly. All others are converted locally at the quality you choose.',
-      },
-    ]}
-  />
-
-  <section class="how" aria-labelledby="how-heading">
-    <h2 id="how-heading">How it works</h2>
-    <div class="text">
-      <p>
-        Image models on Replicate do not agree on how they take a size. imgen does not keep a
-        list of models: it reads the input schema of the model you name and sends exact pixels,
-        the closest allowed aspect ratio, or plain width and height, whichever the model accepts.
-      </p>
-      <p>
-        Then it creates the prediction, polls until the image is ready and saves it. With
-        <code>--webp</code>, models that can deliver WebP do so directly; for all others imgen
-        converts the download locally.
-      </p>
-    </div>
-    <Diagram name="how-it-works" format="svg" narrow={{ width: 560, height: 760 }} />
-    <div class="links">
-      <Button href={url('docs/guides/schema-detection/')} variant="secondary">Schema detection</Button>
-      <Button href={url('docs/guides/batch-mode/')} variant="secondary">Batch mode</Button>
-      <Button href={url('docs/reference/cli/')} variant="quiet">All options →</Button>
-    </div>
-  </section>
-
   <BuildOutput
     heading="Made with imgen"
-    caption="Generated once with imgen and ideogram-ai/ideogram-v3-quality, then committed: generation needs a Replicate API token, so these images are not rebuilt with the site. Prompts and commands are in the showcase."
+    caption="Made with imgen and ideogram-ai/ideogram-v3-quality. Generated once and committed, because generation needs a Replicate token; each image's prompt and command are in the showcase."
     file="examples/gallery/"
   >
     <ul class="strip">
@@ -140,6 +97,45 @@ imgen --prompt-file prompts.json`;
     </ul>
   </BuildOutput>
 
+  <Features
+    items={[
+      {
+        title: 'Any Replicate image model',
+        body: 'Pass owner/name with --model or per job. imgen resolves the latest version itself; FLUX 1.1 Pro is the default.',
+      },
+      {
+        title: 'Schema detection, not model lists',
+        body: 'The model’s OpenAPI schema decides whether imgen sends exact pixels, the closest allowed aspect ratio, or plain width and height.',
+      },
+      {
+        title: 'Batches that keep going',
+        body: 'A JSON file runs many jobs with shared defaults. Progress shows as [2/5], and a failed job does not stop the rest.',
+      },
+    ]}
+  />
+
+  <section class="how" aria-labelledby="how-heading">
+    <h2 id="how-heading">How it works</h2>
+    <div class="text">
+      <p>
+        Image models on Replicate do not agree on how they take a size. imgen does not keep a
+        list of models: it reads the input schema of the model you name and sends exact pixels,
+        the closest allowed aspect ratio, or plain width and height, whichever the model accepts.
+      </p>
+      <p>
+        Then it creates the prediction, polls until the image is ready and saves it. With
+        <code>--webp</code>, models that can deliver WebP do so directly; for all others imgen
+        converts the download locally.
+      </p>
+    </div>
+    <Diagram name="how-it-works" format="svg" narrow={{ width: 320, height: 600 }} />
+    <div class="links">
+      <Button href={url('docs/guides/schema-detection/')} variant="secondary">Schema detection</Button>
+      <Button href={url('docs/guides/batch-mode/')} variant="secondary">Batch mode</Button>
+      <Button href={url('docs/reference/cli/')} variant="quiet">All options →</Button>
+    </div>
+  </section>
+
   <Quickstart
     lead="Three steps from install to a saved image. The documentation covers models, schema detection and batch files."
     steps={[
@@ -157,7 +153,7 @@ imgen --prompt-file prompts.json`;
   .terminal-demo {
     display: block;
     width: 100%;
-    max-width: 720px;
+    max-width: 540px;
     height: auto;
     margin: 0 auto;
   }

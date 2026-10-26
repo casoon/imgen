@@ -3,6 +3,13 @@
 All notable changes to this project are documented in this file. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- **Docs:** the [batch mode guide](https://casoon.github.io/imgen/docs/guides/batch-mode/) shows how
+  a batch run proceeds as a diagram.
+
 ## [0.3.1] - 2026-02-24
 
 ### Fixed

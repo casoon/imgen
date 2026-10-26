@@ -4,8 +4,8 @@
   "title": "How imgen turns a prompt into an image",
   "description": "You pass a prompt and a model. imgen resolves the model's latest version on Replicate and reads its input schema. From the schema it decides how to send the size: exact width and height through a custom aspect ratio, the closest allowed aspect ratio, or plain width and height. It then creates a prediction, polls until it has finished, downloads the image and saves it as PNG or WebP.",
   "source": "src/main.rs (resolve_model, build_input, create_prediction, poll_prediction, download_image), as of 2026-10-26",
-  "width": 1240,
-  "height": 260,
+  "width": 1084,
+  "height": 170,
   "flow": {
     "nodes": [
       { "id": "prompt", "label": "Prompt", "sublabel": "argument or prompt file", "kind": "start" },

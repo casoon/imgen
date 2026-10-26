@@ -16,5 +16,6 @@ cd "$dir"
 
 "$bin" --version > version.txt
 status=0
-REPLICATE_API_TOKEN=placeholder "$bin" --prompt-file jobs.json > run.txt 2>&1 || status=$?
+export REPLICATE_API_TOKEN=placeholder
+"$bin" --prompt-file jobs.json > run.txt 2>&1 || status=$?
 echo "$status" > exit.txt
