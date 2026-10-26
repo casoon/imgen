@@ -39,6 +39,8 @@ imgen --prompt-file prompts.json
 
 ## What happens
 
+<Diagram name="batch-run" />
+
 1. The file is read and validated. Nothing is sent yet.
 2. Every distinct model is resolved once. If one cannot be resolved, the run stops here.
 3. The jobs run one after another. Each starts with a counter such as `[2/5]`.

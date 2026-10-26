@@ -1,0 +1,27 @@
+# Plays the captured run in version.txt, run.txt and exit.txt (see capture.sh): a prompt
+# file whose second job has no `out` field is rejected before the first API request.
+# 46 columns, so the scene stays readable when the hero shrinks to phone width.
+version: 1
+terminal:
+  title: imgen
+  cols: 46
+  rows: 20
+  theme: catppuccin-mocha
+defaults:
+  speed: 30
+steps:
+  - run: imgen --version
+  - show: version.txt
+    lang: text
+  - run: cat jobs.json
+  - show: jobs.json
+    lang: json
+  - run: export REPLICATE_API_TOKEN=placeholder
+  - run: imgen --prompt-file jobs.json
+  - wait: 500
+  - show: run.txt
+    lang: text
+  - run: echo $?
+  - show: exit.txt
+    lang: text
+  - wait: 5000

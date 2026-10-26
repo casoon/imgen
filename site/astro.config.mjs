@@ -19,6 +19,7 @@ export default defineConfig({
         { label: 'Releases', href: 'https://github.com/casoon/imgen/releases' },
         { label: 'Install script', href: 'https://github.com/casoon/imgen/blob/master/install.sh' },
       ],
+      mdxComponents: './src/mdx-components.ts',
       docsGroups: {
         'getting-started': 'Getting started',
         guides: 'Guides',
