@@ -9,6 +9,8 @@ All notable changes to this project are documented in this file. The format foll
 
 - **Docs:** the [batch mode guide](https://casoon.github.io/imgen/docs/guides/batch-mode/) shows how
   a batch run proceeds as a diagram.
+- **Site:** the footer follows the page language instead of always showing German text, and the
+  start page now carries a release teaser and an FAQ (theme 0.11.1).
 
 ## [0.3.1] - 2026-02-24
 

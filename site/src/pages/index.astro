@@ -1,4 +1,5 @@
 ---
+import { readFile } from 'node:fs/promises';
 import {
   Badge,
   Badges,
@@ -6,14 +7,17 @@ import {
   Button,
   CodeBlock,
   Facts,
+  Faq,
   Features,
   Hero,
   Install,
   Quickstart,
+  ReleaseHighlights,
 } from '@casoon/pages-theme/components';
 import Base from '@casoon/pages-theme/layouts/Base.astro';
+import { parseChangelog } from '@casoon/pages-theme/lib/changelog';
+import { url } from '@casoon/pages-theme/lib/url';
 import config from 'virtual:casoon-pages/config';
-import { url } from '@casoon/pages-theme/lib/url.ts';
 import gallery from '../../../examples/gallery/gallery.json';
 // Animated SVG built with castwright from site/captures/batch.terminal.yaml (see capture.sh).
 import batchSvg from '../../captures/batch.svg?url';
@@ -34,6 +38,13 @@ imgen "A sunset over the ocean" --out sunset.png
 
 # Many images from a JSON file
 imgen --prompt-file prompts.json`;
+
+// Skip "Unreleased": it has no version to show as "New in v…" yet.
+const latestRelease = config.changelog
+  ? parseChangelog(await readFile(config.changelog, 'utf8')).find(
+      (r) => r.version.toLowerCase() !== 'unreleased'
+    )
+  : undefined;
 ---
 
 <Base>
@@ -146,6 +157,29 @@ imgen --prompt-file prompts.json`;
   >
     <CodeBlock code={quickstart} lang="shell" title="terminal" label="Shell" />
   </Quickstart>
+
+  {latestRelease && <ReleaseHighlights release={latestRelease} />}
+
+  <Faq
+    items={[
+      {
+        q: 'Is imgen still maintained?',
+        a: 'imgen is feature-complete and no longer actively developed. It works as documented against the Replicate API; issues and pull requests may not be answered.',
+      },
+      {
+        q: 'Which platforms are supported?',
+        a: 'The install script and prebuilt release binaries cover macOS and Linux (x86_64 and arm64). There is no Windows build, but "cargo install --git https://github.com/casoon/imgen" builds imgen from source on any platform Rust supports.',
+      },
+      {
+        q: 'How does imgen handle Replicate rate limits?',
+        a: 'On HTTP 429 responses, imgen respects the Retry-After header (falling back to 10 seconds) and retries up to 5 times before giving up. Each image generation then polls for up to 120 seconds, checking every 2 seconds.',
+      },
+      {
+        q: 'Is imgen on crates.io?',
+        a: 'No. The crate named "imgen" on crates.io is a different project. Install the binary with the install script or build it from source with Cargo.',
+      },
+    ]}
+  />
 </Base>
 
 <style>
