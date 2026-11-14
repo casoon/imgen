@@ -7,7 +7,7 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Changed
 
-- **Pages:** the project site uses the current shared theme (0.12.12).
+- **Pages:** the project site uses the current shared theme (0.12.14).
 - **Docs:** the [batch mode guide](https://casoon.github.io/imgen/docs/guides/batch-mode/) shows how
   a batch run proceeds as a diagram.
 - **Site:** the footer follows the page language instead of always showing German text, and the
